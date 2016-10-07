@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import Question, Choice
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
 
 
@@ -21,7 +22,7 @@ from django.views import generic
 #     template_name = 'results.html'
 
 def index(request):
-    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    latest_question_list = Question.objects.order_by('-pub_date')[:10]
     context = {
         'latest_question_list' : latest_question_list,
     }
@@ -32,9 +33,11 @@ def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'detail.html', {'question' : question})
 
+
 def results(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'results.html', {'question' : question})
+
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -51,9 +54,23 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 
+def add_question(request):
+
+    add_question_name = request.POST['add_question_data']
+    if add_question_name == '':
+        return HttpResponse('question name is required')
+    elif len(add_question_name) < 5:
+        return HttpResponse('question is too short')
+    else:
+        q = Question(question_text=add_question_name, pub_date=timezone.now())
+        q.save()
+        redirect_url = reverse('polls:index')
+        return HttpResponseRedirect(redirect_url)
+
+
 def add_choice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    print(request.POST)
+
     try:
         add_choice_name = request.POST['add_choice_data']
         if add_choice_name == '':
@@ -65,3 +82,4 @@ def add_choice(request, question_id):
     question.choice_set.create(choice_text=add_choice_name)
     redirect_url = reverse('polls:detail', args=(question_id,))
     return HttpResponseRedirect(redirect_url)
+

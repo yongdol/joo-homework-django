@@ -1,3 +1,4 @@
+<h1>질문리스트</h1>
 {% if latest_question_list %}
     <ul>
     {% for question in latest_question_list %}
@@ -7,3 +8,11 @@
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+
+<h5>질문추가</h5>
+<form action="{% url 'polls:add_question' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="add_question_data">
+    <button type="submit">질문추가등록</button>
+</form>
+
