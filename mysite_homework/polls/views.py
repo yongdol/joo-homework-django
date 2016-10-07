@@ -53,15 +53,15 @@ def vote(request, question_id):
 
 def add_choice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-
+    print(request.POST)
     try:
-        q = Question.objects.get(pk=question_id)
-
-    except (KeyError, Choice.DoesNotExist):
-        return render(request, 'detail.html', {
-            'question': question,
-            'error_message': "Write and Add choice text!",
-        })
-    else:
-        q.choice_set.create(choice_text=request.POST['add_choice_data'], votes=0)
-    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+        add_choice_name = request.POST['add_choice_data']
+        if add_choice_name == '':
+            return HttpResponse('choice_ name is required')
+        elif len(add_choice_name) < 3:
+            return HttpResponse('choice_ name is too short')
+    except (KeyError):
+        raise HttpResponse('choice_name kye does not exist')
+    question.choice_set.create(choice_text=add_choice_name)
+    redirect_url = reverse('polls:detail', args=(question_id,))
+    return HttpResponseRedirect(redirect_url)
