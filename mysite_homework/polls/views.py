@@ -75,11 +75,38 @@ def add_choice(request, question_id):
         add_choice_name = request.POST['add_choice_data']
         if add_choice_name == '':
             return HttpResponse('choice_ name is required')
-        elif len(add_choice_name) < 3:
+        elif len(add_choice_name) < 1:
             return HttpResponse('choice_ name is too short')
     except (KeyError):
         raise HttpResponse('choice_name kye does not exist')
     question.choice_set.create(choice_text=add_choice_name)
     redirect_url = reverse('polls:detail', args=(question_id,))
     return HttpResponseRedirect(redirect_url)
+
+
+def choice_delete_question(request):
+
+    question_lists = Question.objects.all()
+    context = {
+        'question_lists': question_lists,
+    }
+    choice_question = request.POST.get('question_id')
+    if choice_question is not None :
+        print("choice question id: %s" % choice_question)
+        delete_question = Question.objects.get(id=choice_question)
+        delete_question.delete()
+
+    else:
+        print("ELSE구문탔음")
+        # return_yes = request.POST.get('return')
+        # if return_yes is None:
+        #     print("return : %s" %return_yes)
+        #     return render(request, 'choice_delete_question.html', context)
+        # else:
+        #     print("ELSE-ELSE구문탐")
+        return render(request, 'choice_delete_question.html', context)
+
+
+    print("삭제끝")
+    return render(request, 'choice_delete_question.html', context)
 

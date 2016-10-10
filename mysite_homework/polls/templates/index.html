@@ -16,3 +16,9 @@
     <button type="submit">질문추가등록</button>
 </form>
 
+
+<h5>질문삭제</h5>
+<form action="{% url 'polls:delete_q' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">질문삭제하기</button>
+</form>

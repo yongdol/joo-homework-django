@@ -1,0 +1,19 @@
+<h1>삭제할 질문리스트를 선택하세요</h1>
+{% if question_lists %}
+<form action="{% url 'polls:delete_q' %}" method="post">
+{% csrf_token %}
+{% for question in question_lists %}
+  <input type="radio" name="question_id" value="{{ question.id }}">
+  <label for="">{{ question.question_text }}</label><br>
+{% endfor %}
+{% else %}
+    <p>No questinos.</p>
+</form>
+
+{% endif %}
+<button type="submit">삭제하기</button>
+
+<form action="{% url 'polls:index' %}" method="post">
+  {% csrf_token %}
+  <button type="submit">메인페이지로돌아가기</button>
+</form>

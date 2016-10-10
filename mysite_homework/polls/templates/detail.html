@@ -7,7 +7,7 @@
     <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
     <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
 {% endfor %}
-<input type="submit" value="Vote" />
+<input type="submit" value="투표하기" />
 </form>
 
 <h5>선택지추가</h5>
@@ -20,5 +20,5 @@
 
 <form action="{% url 'polls:index' %}" method="post">
     {% csrf_token %}
-    <button type="submit">메인페이지로돌아가기</button>
+    <button type="submit" name="return">메인페이지로돌아가기</button>
 </form>
